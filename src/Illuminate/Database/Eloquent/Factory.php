@@ -285,6 +285,7 @@ class Factory implements ArrayAccess
      */
     public function load($path)
     {
+        $previousLoader = self::$loaderInstance;
         $factory = self::$loaderInstance = $this;
 
         if (is_dir($path)) {
@@ -293,7 +294,7 @@ class Factory implements ArrayAccess
             }
         }
 
-        self::$loaderInstance = null;
+        self::$loaderInstance = $previousLoader;
 
         return $factory;
     }
