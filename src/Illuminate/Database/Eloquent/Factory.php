@@ -9,6 +9,13 @@ use Symfony\Component\Finder\Finder;
 class Factory implements ArrayAccess
 {
     /**
+     * Loader instance.
+     *
+     * @var static
+     */
+    private static $loaderInstance;
+
+    /**
      * The model definitions in the container.
      *
      * @var array
@@ -66,6 +73,16 @@ class Factory implements ArrayAccess
         $pathToFactories = $pathToFactories ?: database_path('factories');
 
         return (new static($faker))->load($pathToFactories);
+    }
+
+    /**
+     * Returns the factory container instance.
+     *
+     * @return static
+     */
+    public static function loaderInstance()
+    {
+        return self::$loaderInstance;
     }
 
     /**
@@ -268,13 +285,15 @@ class Factory implements ArrayAccess
      */
     public function load($path)
     {
-        $factory = $this;
+        $factory = self::$loaderInstance = $this;
 
         if (is_dir($path)) {
             foreach (Finder::create()->files()->name('*.php')->in($path) as $file) {
                 require $file->getRealPath();
             }
         }
+
+        self::$loaderInstance = null;
 
         return $factory;
     }

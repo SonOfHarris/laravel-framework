@@ -483,6 +483,24 @@ if (! function_exists('event')) {
     }
 }
 
+if (! function_exists('factories')) {
+    /**
+     * Returns the model factory used to define model factory builders.
+     *
+     * @return EloquentFactory
+     */
+    function factories()
+    {
+        $factory = EloquentFactory::loaderInstance();
+
+        if (is_null($factory)) {
+            $factory = app(EloquentFactory::class);
+        }
+
+        return $factory;
+    }
+}
+
 if (! function_exists('factory')) {
     /**
      * Create a model factory builder for a given class, name, and amount.
